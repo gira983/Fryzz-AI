@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fryzz🥶AI</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px 0;
+      width: 100%;
+    }
+    .response {
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fryzz🥶AI</h1>
+  <p>Введите вопрос:</p>
+  <input type="text" id="userInput" placeholder="Напиши что-нибудь...">
+  <button onclick="sendMessage()">Отправить</button>
+  <div class="response" id="response"></div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput").value;
+      const responseDiv = document.getElementById("response");
+      responseDiv.innerHTML = "Загрузка...";
+
+      const apiKey = "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"; // 
+
+      try {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: input }],
+          })
+        });
+
+        const data = await res.json();
+        responseDiv.innerHTML = data.choices?.[0]?.message?.content || "Нет ответа";
+      } catch (e) {
+        responseDiv.innerHTML = "Ошибка: " + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
